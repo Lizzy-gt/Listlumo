@@ -1,4 +1,3 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ItemCompra({ item, aoAlternarComprado, aoExcluir }) {
   return (
