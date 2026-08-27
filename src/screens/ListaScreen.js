@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import TarefaItem from "../components/ListaItem";
+import ItemCompra from "../components/ListaItem";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Chave única usada para identificar onde os dados do app serão salvos no armazenamento interno do celular
@@ -68,8 +68,8 @@ export default function ListaComprasScreen() {
     // Cria o objeto da nova compra com ID único baseado no timestamp atual
     const novaCompra = {
       id: Date.now().toString(),
-      texto,
-      concluida: false,
+      nome: texto,
+      comprado: false,
     };
 
     // Atualiza o estado mantendo o histórico anterior (...comprasAtuais) e inserindo o novo item no final
@@ -81,9 +81,9 @@ export default function ListaComprasScreen() {
   function alternarConcluida(id) {
     setCompras((comprasAtuais) =>
       // .map percorre todos os itens e retorna uma NOVA lista.
-      // Se encontrar o ID selecionado, cria uma cópia mudando a propriedade 'concluida'.
+      // Se encontrar o ID selecionado, cria uma cópia mudando a propriedade 'comprado'.
       comprasAtuais.map((compra) =>
-        compra.id === id ? { ...compra, concluida: !compra.concluida } : compra
+        compra.id === id ? { ...compra, comprado: !compra.comprado } : compra
       )
     );
   }
@@ -118,7 +118,7 @@ export default function ListaComprasScreen() {
   // Abre a janela de edição preenchendo os dados do item clicado
   function iniciarEdicao(compra) {
     setCompraEditando(compra); // Salva o objeto completo da compra que será editada (ativa a visibilidade do Modal)
-    setTextoEdicao(compra.texto); // Preenche o campo de texto do modal com a descrição atual
+    setTextoEdicao(compra.nome); // Preenche o campo de texto do modal com a descrição atual
   }
 
   // Salva o novo texto da compra editada
@@ -130,7 +130,7 @@ export default function ListaComprasScreen() {
     setCompras((comprasAtuais) =>
       comprasAtuais.map((compra) =>
         compra.id === compraEditando.id
-          ? { ...compra, texto: textoFormatado }
+          ? { ...compra, nome: textoFormatado }
           : compra
       )
     );
@@ -145,7 +145,7 @@ export default function ListaComprasScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined} // Aplica padding apenas no iOS para evitar sobreposição do teclado
     >
-      <Text style={styles.titulo}>Lista de Compras</Text>
+      <Text style={styles.titulo}>🛒 Lista de Compras do Mês</Text>
 
       {/* Formulário para adicionar compra */}
       <View style={styles.formulario}>
@@ -180,9 +180,9 @@ export default function ListaComprasScreen() {
         data={compras}
         keyExtractor={(compra) => compra.id}
         renderItem={({ item }) => (
-          <TarefaItem
-            tarefa={item}
-            aoAlternarConcluida={alternarConcluida}
+          <ItemCompra
+            item={item}
+            aoAlternarComprado={alternarConcluida}
             aoExcluir={excluirCompra}
             aoEditar={() => iniciarEdicao(item)}
           />
@@ -236,7 +236,7 @@ export default function ListaComprasScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#F7F7F2", // off-white
     paddingTop: 60,
     paddingHorizontal: 16,
   },
@@ -245,6 +245,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 16,
     textAlign: "center",
+    color: "#1F3D2B", // verde bem escuro
   },
   formulario: {
     flexDirection: "row",
@@ -254,14 +255,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#CBD9CD", // verde bem claro
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
     marginRight: 8,
   },
   botaoAdicionar: {
-    backgroundColor: "#2e86de",
+    backgroundColor: "#2F6B4F", // verde médio
     borderRadius: 8,
     paddingHorizontal: 16,
     justifyContent: "center",
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   botaoLimpar: {
-    backgroundColor: "#ff4d4d",
+    backgroundColor: "#7A9E85", // verde acinzentado, mais suave que o de adicionar
     paddingVertical: 8,
     borderRadius: 8,
     alignItems: "center",
@@ -287,18 +288,18 @@ const styles = StyleSheet.create({
   },
   listaVazia: {
     textAlign: "center",
-    color: "#888",
+    color: "#8FA396",
     marginTop: 24,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(31,61,43,0.5)", // overlay esverdeado escuro
     justifyContent: "center",
     alignItems: "center",
   },
   modalConteudo: {
     width: "85%",
-    backgroundColor: "#fff",
+    backgroundColor: "#F7F7F2",
     borderRadius: 12,
     padding: 20,
     elevation: 5,
@@ -307,14 +308,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 12,
+    color: "#1F3D2B",
   },
   modalInput: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#CBD9CD",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
     marginBottom: 16,
+    backgroundColor: "#fff",
   },
   modalBotoes: {
     flexDirection: "row",
@@ -327,13 +330,13 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   botaoCancelar: {
-    backgroundColor: "#888",
+    backgroundColor: "#9AAA9E",
   },
   botaoSalvar: {
-    backgroundColor: "#2e86de",
+    backgroundColor: "#2F6B4F",
   },
   textoBotaoModal: {
     color: "#fff",
     fontWeight: "bold",
   },
-});
+})
