@@ -1,8 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-export default function TarefaItem({
-  tarefa,
-  aoAlternarConcluida,
+export default function ItemCompra({
+  item,
+  aoAlternarComprado,
   aoExcluir,
   aoEditar,
 }) {
@@ -10,35 +10,27 @@ export default function TarefaItem({
     <View style={styles.item}>
       <TouchableOpacity
         style={styles.textoContainer}
-        onPress={() => aoAlternarConcluida(tarefa.id)}
+        onPress={() => aoAlternarComprado(item.id)}
+        onLongPress={aoEditar} // toque longo abre o modal de edição
         accessibilityRole="checkbox"
-        accessibilityState={{ checked: tarefa.concluida }}
-        accessibilityLabel={tarefa.texto}
+        accessibilityState={{ checked: item.comprado }}
+        accessibilityLabel={item.nome}
       >
         <View
-          style={[styles.checkbox, tarefa.concluida && styles.checkboxMarcado]}
+          style={[styles.checkbox, item.comprado && styles.checkboxMarcado]}
         >
-          {tarefa.concluida && <Text style={styles.check}>✓</Text>}
+          {item.comprado && <Text style={styles.check}>✓</Text>}
         </View>
-        <Text style={[styles.texto, tarefa.concluida && styles.textoComprado]}>
-          {tarefa.texto}
+        <Text style={[styles.texto, item.comprado && styles.textoComprado]}>
+          {item.nome}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.botaoEditar}
-        onPress={() => aoEditar(tarefa)}
-        accessibilityRole="button"
-        accessibilityLabel={`Editar ${tarefa.texto}`}
-      >
-        <Text style={styles.textoBotaoEditar}>Editar</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
         style={styles.botaoExcluir}
-        onPress={() => aoExcluir(tarefa.id)}
+        onPress={() => aoExcluir(item.id)}
         accessibilityRole="button"
-        accessibilityLabel={`Excluir ${tarefa.texto}`}
+        accessibilityLabel={`Excluir ${item.nome}`}
       >
         <Text style={styles.textoBotaoExcluir}>Excluir</Text>
       </TouchableOpacity>
@@ -51,14 +43,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#fff",
+    backgroundColor: "#F7F7F2",
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 14,
     marginBottom: 10,
+    borderLeftWidth: 4,
+    borderLeftColor: "#2F6B4F", // detalhe verde na lateral do card
     // Sombra leve só para destacar o card (funciona em iOS e Android)
     shadowColor: "#000",
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 3,
     shadowOffset: { width: 0, height: 1 },
     elevation: 2,
@@ -73,15 +67,15 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderWidth: 2,
-    borderColor: "#c8cdd3",
+    borderColor: "#CBD9CD",
     borderRadius: 6,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
   },
   checkboxMarcado: {
-    backgroundColor: "#2f7d68",
-    borderColor: "#2f7d68",
+    backgroundColor: "#2F6B4F",
+    borderColor: "#2F6B4F",
   },
   check: {
     color: "#fff",
@@ -90,29 +84,17 @@ const styles = StyleSheet.create({
   },
   texto: {
     fontSize: 16,
-    color: "#222",
+    color: "#1F3D2B",
   },
   textoComprado: {
     textDecorationLine: "line-through",
-    color: "#999",
+    color: "#9AAA9E",
   },
   botaoExcluir: {
-    backgroundColor: "#e74c3c",
+    backgroundColor: "#7A9E85",
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 6,
-  },
-  botaoEditar: {
-    backgroundColor: "#2e86de",
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 6,
-    marginRight: 8,
-  },
-  textoBotaoEditar: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 12,
   },
   textoBotaoExcluir: {
     color: "#fff",
