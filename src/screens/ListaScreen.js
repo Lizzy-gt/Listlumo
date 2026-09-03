@@ -22,6 +22,7 @@ export default function ListaComprasScreen() {
   const [compras, setCompras] = useState([]); // Lista principal contendo os objetos de cada compra
   const [textoInput, setTextoInput] = useState(""); // Texto digitado no campo de 'Nova Compra'
   const [carregando, setCarregando] = useState(true); // Flag para evitar que o app salve dados antes de carregar os antigos
+  const [modoEscuro, setModoEscuro] = useState(false);
 
   // Estados para controle da janela de edição (Modal)
   const [compraEditando, setCompraEditando] = useState(null); // Guarda a compra selecionada para edição (null = modal fechado)
@@ -142,16 +143,33 @@ export default function ListaComprasScreen() {
 
   return (
     <KeyboardAvoidingView  // Ajusta a tela automaticamente quando o teclado virtual é aberto
-      style={styles.container}
+      style={[styles.container, modoEscuro && styles.containerEscuro]}
       behavior={Platform.OS === "ios" ? "padding" : undefined} // Aplica padding apenas no iOS para evitar sobreposição do teclado
     >
-      <Text style={styles.titulo}>🛒 Lista de Compras do Mês</Text>
+      <View style={styles.cabecalho}>
+        <Text style={[styles.titulo, modoEscuro && styles.textoClaro]}>
+          🛒 Lista de Compras do Mês
+        </Text>
+        <TouchableOpacity
+          style={[styles.botaoTema, modoEscuro && styles.botaoTemaEscuro]}
+          onPress={() => setModoEscuro((temaAtual) => !temaAtual)}
+          accessibilityRole="button"
+          accessibilityLabel={modoEscuro ? "Ativar modo claro" : "Ativar modo escuro"}
+        >
+          <Text
+            style={[styles.textoBotaoTema, modoEscuro && styles.textoBotaoTemaEscuro]}
+          >
+            {modoEscuro ? "Modo claro" : "Modo escuro"}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Formulário para adicionar compra */}
       <View style={styles.formulario}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, modoEscuro && styles.inputEscuro]}
           placeholder="Digite uma nova compra..."
+          placeholderTextColor={modoEscuro ? "#A7B8AD" : "#777"}
           value={textoInput}
           onChangeText={setTextoInput}
           onSubmitEditing={adicionarCompra} // Permite enviar pressionando 'Concluído/Enter' no teclado
@@ -182,13 +200,14 @@ export default function ListaComprasScreen() {
         renderItem={({ item }) => (
           <ItemCompra
             item={item}
+            modoEscuro={modoEscuro}
             aoAlternarComprado={alternarConcluida}
             aoExcluir={excluirCompra}
             aoEditar={() => iniciarEdicao(item)}
           />
         )}
         ListEmptyComponent={
-          <Text style={styles.listaVazia}>
+          <Text style={[styles.listaVazia, modoEscuro && styles.textoClaro]}>
             Nenhuma compra cadastrada ainda.
           </Text>
         }
@@ -202,11 +221,12 @@ export default function ListaComprasScreen() {
         transparent={true}
         onRequestClose={() => setCompraEditando(null)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalConteudo}>
-            <Text style={styles.modalTitulo}>Editar compra</Text>
+        <View style={[styles.modalOverlay, modoEscuro && styles.modalOverlayEscuro]}>
+          <View style={[styles.modalConteudo, modoEscuro && styles.modalConteudoEscuro]}>
+            <Text style={[styles.modalTitulo, modoEscuro && styles.textoClaro]}>Editar compra</Text>
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, modoEscuro && styles.inputEscuro]}
+              placeholderTextColor={modoEscuro ? "#A7B8AD" : "#777"}
               value={textoEdicao}
               onChangeText={setTextoEdicao}
               autoFocus // Foca o cursor no input automaticamente assim que o modal abre
@@ -240,12 +260,43 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 16,
   },
+  containerEscuro: {
+    backgroundColor: "#17211B",
+  },
+  cabecalho: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
   titulo: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 16,
     textAlign: "center",
     color: "#1F3D2B", // verde bem escuro
+    flex: 1,
+  },
+  textoClaro: {
+    color: "#F1F7F2",
+  },
+  botaoTema: {
+    backgroundColor: "#E4EEE5",
+    borderRadius: 8,
+    minWidth: 104,
+    height: 40,
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  botaoTemaEscuro: {
+    backgroundColor: "#30483A",
+  },
+  textoBotaoTema: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#1F3D2B",
+  },
+  textoBotaoTemaEscuro: {
+    color: "#F1F7F2",
   },
   formulario: {
     flexDirection: "row",
@@ -260,6 +311,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     marginRight: 8,
+  },
+  inputEscuro: {
+    backgroundColor: "#25352B",
+    borderColor: "#4C6B58",
+    color: "#F1F7F2",
   },
   botaoAdicionar: {
     backgroundColor: "#2F6B4F", // verde médio
@@ -297,12 +353,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  modalOverlayEscuro: {
+    backgroundColor: "rgba(0,0,0,0.72)",
+  },
   modalConteudo: {
     width: "85%",
     backgroundColor: "#F7F7F2",
     borderRadius: 12,
     padding: 20,
     elevation: 5,
+  },
+  modalConteudoEscuro: {
+    backgroundColor: "#25352B",
   },
   modalTitulo: {
     fontSize: 18,

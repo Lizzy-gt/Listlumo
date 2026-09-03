@@ -5,9 +5,10 @@ export default function ItemCompra({
   aoAlternarComprado,
   aoExcluir,
   aoEditar,
+  modoEscuro,
 }) {
   return (
-    <View style={styles.item}>
+    <View style={[styles.item, modoEscuro && styles.itemEscuro]}>
       <TouchableOpacity
         style={styles.textoContainer}
         onPress={() => aoAlternarComprado(item.id)}
@@ -21,7 +22,13 @@ export default function ItemCompra({
         >
           {item.comprado && <Text style={styles.check}>✓</Text>}
         </View>
-        <Text style={[styles.texto, item.comprado && styles.textoComprado]}>
+        <Text
+          style={[
+            styles.texto,
+            modoEscuro && styles.textoClaro,
+            item.comprado && styles.textoComprado,
+          ]}
+        >
           {item.nome}
         </Text>
       </TouchableOpacity>
@@ -66,6 +73,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     elevation: 2,
   },
+  itemEscuro: {
+    backgroundColor: "#25352B",
+    borderLeftColor: "#74B58B",
+  },
   textoContainer: {
     flex: 1,
     marginRight: 10,
@@ -94,6 +105,9 @@ const styles = StyleSheet.create({
   texto: {
     fontSize: 16,
     color: "#1F3D2B",
+  },
+  textoClaro: {
+    color: "#F1F7F2",
   },
   textoComprado: {
     textDecorationLine: "line-through",
