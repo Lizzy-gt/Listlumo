@@ -92,6 +92,18 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
     color: '#9AAA9E',
   },
+  botaoEditar: {
+    backgroundColor: '#2F6B4F',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  textoBotaoEditar: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
   botaoExcluir: {
     backgroundColor: '#7A9E85',
     paddingVertical: 6,
