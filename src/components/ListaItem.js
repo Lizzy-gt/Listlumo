@@ -1,6 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-export default function ItemCompra({ item, aoAlternarComprado, aoExcluir, aoEditar }) {
+export default function ItemCompra({
+  item,
+  aoAlternarComprado,
+  aoExcluir,
+  aoEditar,
+}) {
   return (
     <View style={styles.item}>
       <TouchableOpacity
@@ -11,7 +16,9 @@ export default function ItemCompra({ item, aoAlternarComprado, aoExcluir, aoEdit
         accessibilityState={{ checked: item.comprado }}
         accessibilityLabel={item.nome}
       >
-        <View style={[styles.checkbox, item.comprado && styles.checkboxMarcado]}>
+        <View
+          style={[styles.checkbox, item.comprado && styles.checkboxMarcado]}
+        >
           {item.comprado && <Text style={styles.check}>✓</Text>}
         </View>
         <Text style={[styles.texto, item.comprado && styles.textoComprado]}>
@@ -42,18 +49,18 @@ export default function ItemCompra({ item, aoAlternarComprado, aoExcluir, aoEdit
 
 const styles = StyleSheet.create({
   item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#F7F7F2',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#F7F7F2",
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 14,
     marginBottom: 10,
     borderLeftWidth: 4,
-    borderLeftColor: '#2F6B4F', // detalhe verde na lateral do card
+    borderLeftColor: "#2F6B4F", // detalhe verde na lateral do card
     // Sombra leve só para destacar o card (funciona em iOS e Android)
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowRadius: 3,
     shadowOffset: { width: 0, height: 1 },
@@ -62,57 +69,57 @@ const styles = StyleSheet.create({
   textoContainer: {
     flex: 1,
     marginRight: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   checkbox: {
     width: 22,
     height: 22,
     borderWidth: 2,
-    borderColor: '#CBD9CD',
+    borderColor: "#CBD9CD",
     borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 12,
   },
   checkboxMarcado: {
-    backgroundColor: '#2F6B4F',
-    borderColor: '#2F6B4F',
+    backgroundColor: "#2F6B4F",
+    borderColor: "#2F6B4F",
   },
   check: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   texto: {
     fontSize: 16,
-    color: '#1F3D2B',
+    color: "#1F3D2B",
   },
   textoComprado: {
-    textDecorationLine: 'line-through',
-    color: '#9AAA9E',
+    textDecorationLine: "line-through",
+    color: "#9AAA9E",
   },
   botaoEditar: {
-    backgroundColor: '#2F6B4F',
+    backgroundColor: "#2F6B4F",
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 6,
     marginRight: 8,
   },
   textoBotaoEditar: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 12,
   },
   botaoExcluir: {
-    backgroundColor: '#7A9E85',
+    backgroundColor: "#7A9E85",
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 6,
   },
   textoBotaoExcluir: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 12,
   },
-})
+});
