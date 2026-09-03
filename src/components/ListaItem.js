@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function TarefaItem({
-  tarefa,
-  aoAlternarConcluida,
+  item,
+  aoAlternarComprado,
   aoExcluir,
   aoEditar,
 }) {
@@ -10,35 +10,35 @@ export default function TarefaItem({
     <View style={styles.item}>
       <TouchableOpacity
         style={styles.textoContainer}
-        onPress={() => aoAlternarConcluida(tarefa.id)}
+        onPress={() => aoAlternarComprado(item.id)}
         accessibilityRole="checkbox"
-        accessibilityState={{ checked: tarefa.concluida }}
-        accessibilityLabel={tarefa.texto}
+        accessibilityState={{ checked: item.comprado }}
+        accessibilityLabel={item.nome}
       >
         <View
-          style={[styles.checkbox, tarefa.concluida && styles.checkboxMarcado]}
+          style={[styles.checkbox, item.comprado && styles.checkboxMarcado]}
         >
-          {tarefa.concluida && <Text style={styles.check}>✓</Text>}
+          {item.comprado && <Text style={styles.check}>✓</Text>}
         </View>
-        <Text style={[styles.texto, tarefa.concluida && styles.textoComprado]}>
-          {tarefa.texto}
+        <Text style={[styles.texto, item.comprado && styles.textoComprado]}>
+          {item.nome}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.botaoEditar}
-        onPress={() => aoEditar(tarefa)}
+        onPress={() => aoEditar(item)}
         accessibilityRole="button"
-        accessibilityLabel={`Editar ${tarefa.texto}`}
+        accessibilityLabel={`Editar ${item.nome}`}
       >
         <Text style={styles.textoBotaoEditar}>Editar</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.botaoExcluir}
-        onPress={() => aoExcluir(tarefa.id)}
+        onPress={() => aoExcluir(item.id)}
         accessibilityRole="button"
-        accessibilityLabel={`Excluir ${tarefa.texto}`}
+        accessibilityLabel={`Excluir ${item.nome}`}
       >
         <Text style={styles.textoBotaoExcluir}>Excluir</Text>
       </TouchableOpacity>
