@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import ItemCompra from "../components/ListaItem";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Chave única usada para identificar onde os dados do app serão salvos no armazenamento interno do celular
 const CHAVE_STORAGE = "@rn-storage-lesson:compras";
@@ -22,6 +22,7 @@ export default function ListaComprasScreen() {
   const [compras, setCompras] = useState([]); // Lista principal contendo os objetos de cada compra
   const [textoInput, setTextoInput] = useState(""); // Texto digitado no campo de 'Nova Compra'
   const [carregando, setCarregando] = useState(true); // Flag para evitar que o app salve dados antes de carregar os antigos
+  // Controla se a tela deve usar as cores do tema escuro ou do tema claro.
   const [modoEscuro, setModoEscuro] = useState(false);
 
   // Estados para controle da janela de edição (Modal)
@@ -54,9 +55,11 @@ export default function ListaComprasScreen() {
     if (carregando) return;
 
     // Converte a lista de objetos em texto (JSON.stringify) para poder gravar no armazenamento do dispositivo
-    AsyncStorage.setItem(CHAVE_STORAGE, JSON.stringify(compras)).catch((erro) => {
-      console.error("Erro ao salvar a item no storage:", erro);
-    });
+    AsyncStorage.setItem(CHAVE_STORAGE, JSON.stringify(compras)).catch(
+      (erro) => {
+        console.error("Erro ao salvar a item no storage:", erro);
+      },
+    );
   }, [compras, carregando]);
 
   // FUNÇÕES DE MANIPULAÇÃO DA LISTA
@@ -64,7 +67,7 @@ export default function ListaComprasScreen() {
   // Adiciona uma nova compra na lista
   function adicionarCompra() {
     const texto = textoInput.trim(); // Remove espaços em branco desnecessários no início e fim
-    if (texto === '') return; // Impede adicionar compras vazias
+    if (texto === "") return; // Impede adicionar compras vazias
 
     // Cria o objeto da nova compra com ID único baseado no timestamp atual
     const novaCompra = {
@@ -84,8 +87,8 @@ export default function ListaComprasScreen() {
       // .map percorre todos os itens e retorna uma NOVA lista.
       // Se encontrar o ID selecionado, cria uma cópia mudando a propriedade 'comprado'.
       comprasAtuais.map((compra) =>
-        compra.id === id ? { ...compra, comprado: !compra.comprado } : compra
-      )
+        compra.id === id ? { ...compra, comprado: !compra.comprado } : compra,
+      ),
     );
   }
 
@@ -93,7 +96,7 @@ export default function ListaComprasScreen() {
   function excluirCompra(id) {
     setCompras((comprasAtuais) =>
       // .filter cria uma nova lista contendo APENAS as compras que possuem ID diferente do selecionado
-      comprasAtuais.filter((compra) => compra.id !== id)
+      comprasAtuais.filter((compra) => compra.id !== id),
     );
   }
 
@@ -112,7 +115,7 @@ export default function ListaComprasScreen() {
           style: "destructive",
           onPress: () => setCompras([]), // Redefine o estado para um array vazio
         },
-      ]
+      ],
     );
   }
 
@@ -132,8 +135,8 @@ export default function ListaComprasScreen() {
       comprasAtuais.map((compra) =>
         compra.id === compraEditando.id
           ? { ...compra, nome: textoFormatado }
-          : compra
-      )
+          : compra,
+      ),
     );
 
     // Reseta os estados de edição, o que fecha a janela Modal automaticamente
@@ -142,22 +145,30 @@ export default function ListaComprasScreen() {
   }
 
   return (
-    <KeyboardAvoidingView  // Ajusta a tela automaticamente quando o teclado virtual é aberto
+    <KeyboardAvoidingView // Ajusta a tela automaticamente quando o teclado virtual é aberto
+      // Aplica o fundo escuro somente quando modoEscuro estiver ativado.
       style={[styles.container, modoEscuro && styles.containerEscuro]}
       behavior={Platform.OS === "ios" ? "padding" : undefined} // Aplica padding apenas no iOS para evitar sobreposição do teclado
     >
       <View style={styles.cabecalho}>
+        {/* O titulo e o botao de tema mudam de cor conforme o tema selecionado. */}
         <Text style={[styles.titulo, modoEscuro && styles.textoClaro]}>
           🛒 Lista de Compras do Mês
         </Text>
         <TouchableOpacity
           style={[styles.botaoTema, modoEscuro && styles.botaoTemaEscuro]}
+          // Inverte o tema atual sem alterar os itens da lista.
           onPress={() => setModoEscuro((temaAtual) => !temaAtual)}
           accessibilityRole="button"
-          accessibilityLabel={modoEscuro ? "Ativar modo claro" : "Ativar modo escuro"}
+          accessibilityLabel={
+            modoEscuro ? "Ativar modo claro" : "Ativar modo escuro"
+          }
         >
           <Text
-            style={[styles.textoBotaoTema, modoEscuro && styles.textoBotaoTemaEscuro]}
+            style={[
+              styles.textoBotaoTema,
+              modoEscuro && styles.textoBotaoTemaEscuro,
+            ]}
           >
             {modoEscuro ? "Modo claro" : "Modo escuro"}
           </Text>
@@ -167,6 +178,7 @@ export default function ListaComprasScreen() {
       {/* Formulário para adicionar compra */}
       <View style={styles.formulario}>
         <TextInput
+          // Troca o fundo, a borda e a cor do texto do campo no modo escuro.
           style={[styles.input, modoEscuro && styles.inputEscuro]}
           placeholder="Digite uma nova compra..."
           placeholderTextColor={modoEscuro ? "#A7B8AD" : "#777"}
@@ -200,6 +212,7 @@ export default function ListaComprasScreen() {
         renderItem={({ item }) => (
           <ItemCompra
             item={item}
+            // Envia o tema para cada item poder aplicar suas próprias cores.
             modoEscuro={modoEscuro}
             aoAlternarComprado={alternarConcluida}
             aoExcluir={excluirCompra}
@@ -221,9 +234,19 @@ export default function ListaComprasScreen() {
         transparent={true}
         onRequestClose={() => setCompraEditando(null)}
       >
-        <View style={[styles.modalOverlay, modoEscuro && styles.modalOverlayEscuro]}>
-          <View style={[styles.modalConteudo, modoEscuro && styles.modalConteudoEscuro]}>
-            <Text style={[styles.modalTitulo, modoEscuro && styles.textoClaro]}>Editar compra</Text>
+        {/* No modo escuro, o fundo externo e o painel do modal recebem cores mais escuras. */}
+        <View
+          style={[styles.modalOverlay, modoEscuro && styles.modalOverlayEscuro]}
+        >
+          <View
+            style={[
+              styles.modalConteudo,
+              modoEscuro && styles.modalConteudoEscuro,
+            ]}
+          >
+            <Text style={[styles.modalTitulo, modoEscuro && styles.textoClaro]}>
+              Editar compra
+            </Text>
             <TextInput
               style={[styles.modalInput, modoEscuro && styles.inputEscuro]}
               placeholderTextColor={modoEscuro ? "#A7B8AD" : "#777"}
@@ -261,6 +284,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   containerEscuro: {
+    // Fundo principal usado enquanto o modo escuro está ativo.
     backgroundColor: "#17211B",
   },
   cabecalho: {
@@ -276,6 +300,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textoClaro: {
+    // Cor clara para manter textos legíveis sobre fundos escuros.
     color: "#F1F7F2",
   },
   botaoTema: {
@@ -288,6 +313,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   botaoTemaEscuro: {
+    // Fundo do botao de alternancia quando o tema escuro esta selecionado.
     backgroundColor: "#30483A",
   },
   textoBotaoTema: {
@@ -313,6 +339,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   inputEscuro: {
+    // Cores do campo de texto no modo escuro, incluindo o texto digitado.
     backgroundColor: "#25352B",
     borderColor: "#4C6B58",
     color: "#F1F7F2",
@@ -354,6 +381,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalOverlayEscuro: {
+    // Escurece a camada que fica atras do modal no tema escuro.
     backgroundColor: "rgba(0,0,0,0.72)",
   },
   modalConteudo: {
@@ -364,6 +392,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalConteudoEscuro: {
+    // Fundo do painel de edicao no modo escuro.
     backgroundColor: "#25352B",
   },
   modalTitulo: {
@@ -401,4 +430,4 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
-})
+});

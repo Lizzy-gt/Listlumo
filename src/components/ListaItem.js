@@ -5,9 +5,11 @@ export default function ItemCompra({
   aoAlternarComprado,
   aoExcluir,
   aoEditar,
+  // Recebe o tema da tela para adaptar a aparencia de cada item.
   modoEscuro,
 }) {
   return (
+    // O item troca o fundo e a borda lateral quando o modo escuro esta ativo.
     <View style={[styles.item, modoEscuro && styles.itemEscuro]}>
       <TouchableOpacity
         style={styles.textoContainer}
@@ -25,6 +27,7 @@ export default function ItemCompra({
         <Text
           style={[
             styles.texto,
+            // Deixa o nome claro para continuar legivel no fundo escuro.
             modoEscuro && styles.textoClaro,
             item.comprado && styles.textoComprado,
           ]}
@@ -74,6 +77,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   itemEscuro: {
+    // Cores do card de compra no modo escuro.
     backgroundColor: "#25352B",
     borderLeftColor: "#74B58B",
   },
@@ -107,6 +111,7 @@ const styles = StyleSheet.create({
     color: "#1F3D2B",
   },
   textoClaro: {
+    // Cor usada no texto do item sobre o card escuro.
     color: "#F1F7F2",
   },
   textoComprado: {
