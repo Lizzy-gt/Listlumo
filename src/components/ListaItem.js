@@ -20,6 +20,15 @@ export default function ItemCompra({ item, aoAlternarComprado, aoExcluir, aoEdit
       </TouchableOpacity>
 
       <TouchableOpacity
+        style={styles.botaoEditar}
+        onPress={() => aoEditar(item)}
+        accessibilityRole="button"
+        accessibilityLabel={`Editar ${item.nome}`}
+      >
+        <Text style={styles.textoBotaoEditar}>Editar</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
         style={styles.botaoExcluir}
         onPress={() => aoExcluir(item.id)}
         accessibilityRole="button"
